@@ -649,7 +649,11 @@ public class GhidraScriptComponentProvider extends ComponentProviderAdapter {
 		String scriptName = scriptFile.getName();
 		GhidraScriptProvider provider = GhidraScriptUtil.getProvider(scriptFile);
 		try {
-			return provider.getScriptInstance(scriptFile, console.getStdErr());
+			GhidraScript gs = provider.getScriptInstance(scriptFile, console.getStdErr());
+			if (gs == null) {
+				console.addErrorMessage("", "Provider did not produce script: " + scriptName);
+			}
+			return gs;
 		}
 		catch (IllegalAccessException e) {
 			console.addErrorMessage("", "Unable to access script: " + scriptName);
